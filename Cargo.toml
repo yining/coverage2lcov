@@ -1,0 +1,31 @@
+[package]
+name = "coverage2lcov"
+version = "0.1.0"
+authors = ["Zhang Yining <zhang.yining@gmail.com>"]
+edition = "2018"
+
+
+[[bin]]
+name = "coverage2lcov"
+path = "src/main.rs"
+
+[lib]
+name = "coverage2lcov"
+path = "src/lib.rs"
+test = true
+doc = true
+doctest = true
+bench = true
+harness = true
+edition = "2018"
+crate-type = ["lib"]
+
+
+[dependencies]
+regex = "1.5.5"
+
+[dev-dependencies]
+
+
+
+
