@@ -26,5 +26,8 @@ jobs:
           override: true
       - uses: actions-rs/cargo@v1
         with:
-          command: test
+          command: test --no-fail-fast
+      - uses: actions-rs/cargo@v1
+        with:
+          command: check --release
 

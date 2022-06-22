@@ -9,24 +9,25 @@ MAKEFLAGS += --no-builtin-rules
 
 COVERAGE_LCOV_DATA_FILE=lcov.info
 COVERAGE_HTML_DIR=htmlcov
+CARGO=cargo
 
 .PHONY: clean
 clean:
-	cargo clean
-	rm -f $(HOME)/bin/coverage2lcov
+	$(CARGO) clean
+	rm -f  ./$(COVERAGE_LCOV_DATA_FILE)
+	rm -rf ./$(COVERAGE_HTML_DIR)
 
 .PHONY: test
 test:
-	cargo test
+	$(CARGO) test --no-fail-fast
 
 .PHONY: build
 build: test
-	cargo build && cargo doc
+	$(CARGO) build && cargo doc
 
 .PHONY: install
-install: build
-	cp ./target/debug/coverage2lcov \
-		$(HOME)/bin/coverage2lcov
+install: test
+	$(CARGO) install --path $(PWD)
 
 .PHONY: coverage-gen
 coverage-gen: coverage-cargo-llvm
@@ -35,7 +36,7 @@ coverage-gen: coverage-cargo-llvm
 coverage-grcov:
 	export RUSTFLAGS="-C instrument-coverage"
 	export LLVM_PROFILE_FILE='profraw-files/coverage-%p-%m.profraw'
-	cargo test
+	$(CARGO) test --no-fail-fast
 	grcov . --binary-path ./target/debug -s . -t lcov --branch \
 		--ignore-not-existing --ignore "/*" > $(COVERAGE_LCOV_DATA_FILE)
 	# grcov . --binary-path ./target/debug -s . -t html --branch --ignore-not-existing  -o $(COVERAGE_HTML_DIR)
@@ -46,5 +47,5 @@ coverage-grcov:
 .PHONY: coverage-cargo-llvm
 coverage-cargo-llvm:
 	# NOTE: by default `cargo llvm-cov` runs `cargo test`
-	cargo llvm-cov --lcov --output-path $(COVERAGE_LCOV_DATA_FILE)
-	cargo llvm-cov --html --output-dir $(COVERAGE_HTML_DIR)
+	$(CARGO) llvm-cov --lcov --output-path $(COVERAGE_LCOV_DATA_FILE)
+	$(CARGO) llvm-cov --html --output-dir $(COVERAGE_HTML_DIR)

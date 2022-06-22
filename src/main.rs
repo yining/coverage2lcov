@@ -1,6 +1,6 @@
 use std::env;
 use std::fs::File;
-use std::io::{BufRead, BufReader};
+use std::io::{self, BufRead};
 use std::path::Path;
 
 mod lib;
@@ -9,23 +9,22 @@ use lib::*;
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    let lcov_file = &args[1];
+    let coverage_file = &args[1];
 
-    for line in lines_from_file(lcov_file) {
-        match FileRecord::from_string(line) {
-            Some(fr) => println!("{}", fr),
-            None => continue,
+    if let Ok(lines) = read_lines(coverage_file) {
+        for line in lines.flatten() {
+            match FileCov::parse(&line) {
+                Some(fr) => println!("{}", fr),
+                None => continue,
+            }
         }
     }
 }
 
-pub fn lines_from_file<P>(fname: P) -> Vec<String>
+fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
 where
     P: AsRef<Path>,
 {
-    let f = File::open(fname).expect("no such file");
-    let buf = BufReader::new(f);
-    buf.lines()
-        .map(|l| l.expect("could not parse line"))
-        .collect()
+    let file = File::open(filename)?;
+    Ok(io::BufReader::new(file).lines())
 }
