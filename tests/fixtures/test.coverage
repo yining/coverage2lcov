@@ -1,0 +1,20 @@
+Name                                    Stmts   Miss  Cover   Missing
+---------------------------------------------------------------------
+autoload/lcov.vim                          74     33    55%   11, 16-20, 27-42, 49, 73, 97-103, 117-122, 128-129
+autoload/lcov/colorscheme.vim              12      3    75%   12, 18-19
+autoload/lcov/colorscheme/default.vim      23      0   100%
+autoload/lcov/parser.vim                   45      2    96%   44-45
+autoload/lcov/signcolors.vim               44      8    82%   12-13, 28, 31, 34, 48, 51, 54
+autoload/lcov/uncovered.vim                75      2    97%   32, 104
+autoload/lcov/utils.vim                    48     18    62%   58-73, 78-79
+autoload/lcov/watcher.vim                  35     23    34%   6, 12, 21-23, 30-54
+ftdetect/lcov.vim                          12      0   100%
+ftplugin/lcov.vim                          32      8    75%   5-13
+plugin/lcov.vim                            49      2    96%   5, 10
+syntax/lcov.vim                            48      1    98%   5
+test/find-proj-root-dir.vim                62      0   100%
+test/parser-aggregate-test.vim             96      0   100%
+test/parser-tests.vim                     101      0   100%
+test/uncovered-tests.vim                  103      0   100%
+---------------------------------------------------------------------
+TOTAL                                     859    100    88%

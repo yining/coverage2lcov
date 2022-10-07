@@ -19,7 +19,12 @@ clean:
 
 .PHONY: test
 test:
-	$(CARGO) test --no-fail-fast
+	$(CARGO) test --no-fail-fast --all-features
+
+.PHONY: check
+check:
+	$(CARGO) clippy --tests -- -Dclippy::all -Dclippy::pedantic -Dclippy::cargo
+	$(CARGO) check --all-features
 
 .PHONY: build
 build: test

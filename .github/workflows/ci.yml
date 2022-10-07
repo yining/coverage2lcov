@@ -14,9 +14,7 @@ jobs:
         # os: [ubuntu-latest, macos-latest]
         os: [ubuntu-latest]
         toolchain: [stable, nightly]
-
     runs-on: ${{ matrix.os }}
-
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -24,10 +22,19 @@ jobs:
           profile: minimal
           toolchain: ${{ matrix.toolchain }}
           override: true
-      - uses: actions-rs/cargo@v1
+      - run: cargo test  --no-fail-fast --all-features
+      - run: cargo check --release --all-features
+
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
         with:
-          command: test --no-fail-fast
-      - uses: actions-rs/cargo@v1
-        with:
-          command: check --release
+          profile: minimal
+          toolchain: nightly
+          components: clippy
+          override: true
+      - run: cargo clippy --tests -- -Dclippy::all -Dclippy::pedantic -Dclippy::cargo
 

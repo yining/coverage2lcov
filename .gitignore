@@ -21,3 +21,6 @@ flamegraph.svg
 lcov.info
 coverage/
 htmlcov/
+
+# cargo-mutants result
+mutants.out*/
