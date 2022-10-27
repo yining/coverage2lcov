@@ -1,6 +1,7 @@
+use std::convert::TryFrom;
 use std::env;
 use std::fs::File;
-use std::io::{self, Lines, BufRead, BufReader};
+use std::io::{self, BufRead, BufReader, Lines};
 use std::path::Path;
 
 mod lib;
@@ -18,9 +19,9 @@ fn main() {
 
     if let Ok(lines) = read_lines(coverage_file) {
         for line in lines.flatten() {
-            match FileCov::parse(&line) {
-                Some(fr) => println!("{}", fr),
-                None => continue,
+            match FileCov::try_from(line.as_str()) {
+                Ok(v) => println!("{}", v),
+                Err(_) => continue,
             }
         }
     } else {
@@ -29,7 +30,7 @@ fn main() {
     }
 }
 
-// TODO: a better read_lines fn
+// TODO: a better read_lines fn, and also support stdin
 fn read_lines<P>(filename: P) -> io::Result<Lines<BufReader<File>>>
 where
     P: AsRef<Path>,

@@ -7,7 +7,7 @@ categories  = ["Development tools", "command-line-utilities"]
 version     = "0.1.0"
 license     = "MIT OR Apache-2.0"
 authors     = ["Zhang Yining <zhang.yining@gmail.com>"]
-edition     = "2018"
+edition     = "2021"
 exclude     = [".github/", ".vimrc", ".envrc", ".vscode/"]
 
 [[bin]]
@@ -22,7 +22,7 @@ doc = true
 doctest = true
 bench = true
 harness = true
-edition = "2018"
+edition = "2021"
 crate-type = ["lib"]
 
 [dependencies]
