@@ -28,7 +28,7 @@ check:
 
 .PHONY: build
 build: test
-	$(CARGO) build && cargo doc
+	$(CARGO) build
 
 .PHONY: install
 install: test
@@ -44,7 +44,6 @@ coverage-grcov:
 	$(CARGO) test --no-fail-fast
 	grcov . --binary-path ./target/debug -s . -t lcov --branch \
 		--ignore-not-existing --ignore "/*" > $(COVERAGE_LCOV_DATA_FILE)
-	# grcov . --binary-path ./target/debug -s . -t html --branch --ignore-not-existing  -o $(COVERAGE_HTML_DIR)
 	genhtml -output-directory $(COVERAGE_HTML_DIR) \
 		--show-details --highlight --ignore-errors source --legend \
 		$(COVERAGE_LCOV_DATA_FILE)

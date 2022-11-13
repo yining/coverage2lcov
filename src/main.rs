@@ -4,8 +4,7 @@ use std::fs::File;
 use std::io::{self, BufRead, BufReader, Lines};
 use std::path::Path;
 
-mod lib;
-use lib::FileCov;
+use coverage2lcov::FileCov;
 
 fn main() {
     let args: Vec<String> = env::args().collect();

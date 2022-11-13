@@ -3,24 +3,44 @@ use std::convert::TryFrom;
 use std::fmt::{self, Debug};
 use std::ops::RangeInclusive;
 
-/**
- * `FileCov` represents one line of a file coverage data in coverage report
- */
+/// `FileCov` represents one line of a file coverage data in coverage report
+///
+/// An example line in coverage.py output:
+///
+/// `"src/lib/config.rs          45     11    76%   37-45, 60, 73"`
+///
+/// is represented as:
+///
+/// ```
+/// let fc = coverage2lcov::FileCov {
+///     file: String::from("src/lib/config.rs"),
+///     stmt_count: 45,
+///     miss_count: 11,
+///     covered_percent: 76,
+///     missed_sections: vec![37..=45, 60..=60, 73..=73]
+/// };
+/// ```
 #[derive(Debug, PartialEq, Eq)]
 pub struct FileCov {
+    /// name of the tested source file as in the coverage report
     pub file: String,
+
+    /// number of statements in the file
     pub stmt_count: usize,
+
+    /// number of statements missed in testing
     pub miss_count: usize,
+
+    /// percentage of statements covered by tests
     pub covered_percent: u8,
-    /// a vector of sections of lines missed (not covered)
+
+    /// a vector of sections of lines missed (not covered).
     /// each section is an inclusive range of usize representing the start and
     /// end line numbers
     pub missed_sections: Vec<RangeInclusive<usize>>,
 }
 
-/**
- * Outputs data represented by `FileCov` record in the `lcov` format
- */
+/// Outputs data represented by `FileCov` record in the `lcov` format
 impl fmt::Display for FileCov {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         writeln!(f, "SF:{}", self.file)?;
@@ -38,6 +58,24 @@ impl TryFrom<&str> for FileCov {
     type Error = String;
 
     /// Convert a line from coverage data into an option of `FileCov` struct
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use coverage2lcov::FileCov;
+    ///
+    /// let s = "src/lib/config.rs       35     23    34%   6, 12, 21-23, 30-54";
+    ///
+    /// let fc = FileCov::try_from(s).unwrap();
+    ///
+    /// assert_eq!(fc, FileCov{
+    ///     file: String::from("src/lib/config.rs"),
+    ///     stmt_count: 35,
+    ///     miss_count: 23,
+    ///     covered_percent: 34,
+    ///     missed_sections: vec![6..=6, 12..=12, 21..=23, 30..=54]
+    /// });
+    /// ```
     fn try_from(line: &str) -> Result<Self, Self::Error> {
         let parts: Vec<&str> = line.split('%').collect();
         let sections: Vec<RangeInclusive<usize>> =
